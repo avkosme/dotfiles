@@ -153,7 +153,7 @@ set completeopt=noinsert,menuone,noselect
 set complete+=kspell
 
 if has('mouse')
-  set mouse=a
+  set mouse=r
 endif
 
 " if has("clipboard")
