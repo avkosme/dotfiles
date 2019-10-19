@@ -15,8 +15,6 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
-" Class/module browser
-Plug 'majutsushi/tagbar'
 " Git/mercurial/others diff icons on the side of the file lines
 Plug 'mhinz/vim-signify'
 Plug 'tpope/vim-sensible'
