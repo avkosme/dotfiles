@@ -15,6 +15,7 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
+Plug 'mhinz/vim-signify'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-fugitive'
 Plug 'terryma/vim-multiple-cursors'
@@ -166,6 +167,7 @@ set ttyfast
 set shortmess+=c
 
 set cursorline
+set cursorcolumn
 set hidden
 set nofoldenable
 set wrap
