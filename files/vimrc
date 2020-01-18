@@ -15,6 +15,10 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
+" vim-hugo-helper
+Plug 'robertbasic/vim-hugo-helper'
+" Vim syntax for TOML
+Plug 'cespare/vim-toml'
 " Class/module browser
 Plug 'majutsushi/tagbar'
 " Git/mercurial/others diff icons on the side of the file lines
