@@ -14,7 +14,8 @@ if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
-
+" Go language support for Vim
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 " vim-hugo-helper
 Plug 'robertbasic/vim-hugo-helper'
 " Vim syntax for TOML
