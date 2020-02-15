@@ -14,7 +14,10 @@ if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
+" Python-mode, a Python IDE for Vim
+" Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
 " Go language support for Vim
+Plug 'Chiel92/vim-autoformat'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 " vim-hugo-helper
 Plug 'robertbasic/vim-hugo-helper'
@@ -336,7 +339,8 @@ augroup FileTypeTetect
   autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
   autocmd BufNewFile,BufRead *.slime setlocal filetype=slim
   autocmd BufNewFile,BufRead *.jsh setlocal filetype=java
-
+  autocmd BufNewFile,BufRead *.py setlocal filetype=python
+ "   au FileType python setlocal formatprg=autopep8\ -
   " au BufEnter *.js setl ts=2 sw=2 sts=2
   " au BufEnter *.html setl ts=4 sw=4 sts=4
   " au BufEnter *.tex setl wrap tw=79 fo=tcqor
