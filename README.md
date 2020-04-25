@@ -1,7 +1,7 @@
 ### Requirements
 
 * Linux or Mac
-* [Nvim](https://github.com/neovim/neovim/wiki/Installing-Neovim)
+* [Nvim](https://github.com/neovim/neovim/wiki/Installing-Neovim) (version >= 0.3.x)
 * make (for automatic installation)
 * git (for automatic installation)
 * [Node.js](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions)
@@ -9,24 +9,9 @@
 #### Global
 
 * [Silver Searcher (ag)](https://github.com/ggreer/the_silver_searcher)
-
-#### Ruby/Rails
-
-* gem install solargraph rubocop
-* gem install rubocop-rspec rubocop-rails rubocop-performance
-
-#### PHP
-
-* composer global require "squizlabs/php_codesniffer=*"
-
-#### JS
-
-* npm install -g eslint babel-eslint
-* npx install-peerdeps -g eslint-config-airbnb
-
-#### HTML/CSS
-
-* npm install -g stylelint stylelint-config-recommended stylelint-config-standard
+* [fzf](https://github.com/junegunn/fzf)
+* [bat](https://github.com/sharkdp/bat)
+* [fd](https://github.com/sharkdp/fd)
 
 ### Setup
 
@@ -35,6 +20,8 @@ $ git clone git@github.com:mokevnin/dotfiles.git ~/dotfiles
 $ cd dotfiles
 $ make nvim-install
 $ make dotfiles-install # optional
+# install additional packages for some languages (see Makefile)
+$ make deps-all #optional
 ```
 
 ### VIM

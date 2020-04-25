@@ -14,13 +14,23 @@ nvim-install:
 	ln -s $(PWD)/files/coc-settings.json ~/.config/nvim/coc-settings.json | true
 
 macos-prepare:
-	brew install the_silver_searcher fzf bat htop fd ncdu tldr httpie bash-completion
+	brew install the_silver_searcher fzf bat htop fd ncdu tldr httpie
 
-# docker-build:
-# 	docker build . -t mokevnin/dotfiles
-# docker-push:
-# 	docker push mokevnin/dotfiles
-# docker-bash:
-# 	docker run -it mokevnin/dotfiles bash
+deps: deps-gem deps-composer deps-npm deps-pip
 
-# .PHONY:
+deps-pip:
+	pip2 install --upgrade pynvim
+	pip3 install --upgrade pynvim
+
+deps-gem:
+	gem install solargraph rubocop neovim
+	gem install rubocop-rspec rubocop-rails rubocop-performance
+
+deps-composer:
+	composer global require "squizlabs/php_codesniffer=*"
+
+deps-npm:
+	npm install -g neovim
+	npm install -g prettier eslint babel-eslint
+	npx install-peerdeps -g eslint-config-airbnb
+	npm install -g stylelint stylelint-config-recommended stylelint-config-standard
