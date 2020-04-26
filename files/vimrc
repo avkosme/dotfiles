@@ -15,6 +15,7 @@ endif
 
 call plug#begin('~/.vim/plugged')
 Plug 'leafgarland/typescript-vim'
+Plug 'airblade/vim-gitgutter'
 " Python-mode, a Python IDE for Vim
 " Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
 " Go language support for Vim
@@ -27,7 +28,7 @@ Plug 'cespare/vim-toml'
 " Class/module browser
 Plug 'majutsushi/tagbar'
 " Git/mercurial/others diff icons on the side of the file lines
-Plug 'mhinz/vim-signify'
+" Plug 'mhinz/vim-signify'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-fugitive'
 Plug 'terryma/vim-multiple-cursors'
@@ -156,6 +157,7 @@ call plug#end()
 " set rtp+=/root/.fzf
 
 let mapleader = "\<Space>"
+let g:gitgutter_highlight_lines = 1
 
 " https://github.com/vim/vim/blob/master/runtime/doc/russian.txt
 " Enable hotkeys for Russian layout
