@@ -291,7 +291,12 @@ nnoremap <leader>b :Buffers<CR>
 let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_toc_autofit = 1
 
-let g:vista_default_executive = 'coc'
+" let g:vista_default_executive = 'coc'
+let g:vista_default_executive = 'ctags'
+let g:vista_executive_for = {
+  \ 'cpp': 'vim_lsp',
+  \ 'php': 'vim_lsp',
+  \ }
 
 nmap     <C-F>f <Plug>CtrlSFPrompt
 vmap     <C-F>f <Plug>CtrlSFVwordPath
