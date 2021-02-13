@@ -16,6 +16,9 @@ endif
 call plug#begin('~/.vim/plugged')
 Plug 'leafgarland/typescript-vim'
 
+" WakaTime
+Plug 'wakatime/vim-wakatime'
+
 " Git
 Plug 'jreybert/vimagit'
 Plug 'tpope/vim-fugitive'
@@ -453,6 +456,8 @@ endfunction
 
 "" Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
+
+autocmd BufWritePre * :%s/\s\+$//e
 
 "" Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
