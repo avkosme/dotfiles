@@ -131,3 +131,6 @@ passcreate() {
 ## Разрешить в чужую сторону
 alias git-theirs="grep -lr '<<<<<<<' . | xargs git checkout --theirs"
 alias git-only-master="git branch | grep -v "master" | xargs git branch -D"
+
+# opencode
+export PATH="$HOME/.opencode/bin:$PATH"
