@@ -118,7 +118,7 @@ Create `.sops.yaml` in your repo root to avoid repeating `--age` flags:
 ```yaml
 # ~/.dotfiles/.sops.yaml
 creation_rules:
-  - path_regex: \.local\.age$
+  - path_regex: \.(yaml|yml|json|env|local)$
     age: <YOUR_PUBLIC_KEY_HERE>  # Replace with output from above
 ```
 
