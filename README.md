@@ -133,6 +133,7 @@ alias db-tunnel='ssh -L 5432:localhost:5432 db-admin@prod-db'
 EOF
 
 # 2. Encrypt with SOPS + Age
+export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"
 sops -e stow/ssh/.ssh_aliases.local > stow/ssh/.ssh_aliases.local.age
 
 # 3. Remove plaintext immediately
