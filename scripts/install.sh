@@ -148,12 +148,13 @@ setup_default_shell() {
   fi
 }
 
+
 # ──────────────────────────────────────────────────────────────
 # 5. Setup scripts directory and symlinks
 # ──────────────────────────────────────────────────────────────
 setup_scripts_symlinks() {
   local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-  local dotfiles_root="$(dirname "$script_dir)"
+  local dotfiles_root="$(dirname "$script_dir")"
   local scripts_src="$dotfiles_root/scripts"
   local scripts_dest="$HOME/.local/bin"
 
@@ -174,41 +175,42 @@ setup_scripts_symlinks() {
     return 0
   fi
 
-  # Find all executable scripts in source directory
-  local executable_scripts=()
-  while IFS= read -r -d '' script; do
-    if [[ -x "$script" ]]; then
-      executable_scripts+=("$script")
-    fi
-  done < <(find "$scripts_src" -maxdepth 1 -type f -executable -print0 2>/dev/null)
+  # Find all executable files in the source scripts directory
+  local found_scripts=false
+  for src_script in "$scripts_src"/*; do
+    # Skip if no files match the pattern
+    [[ -e "$src_script" ]] || continue
 
-  if [[ ${#executable_scripts[@]} -eq 0 ]]; then
-    log_warn "No executable scripts found in $scripts_src — nothing to symlink"
-    return 0
-  fi
+    # Only process files (not directories) that are executable
+    if [[ -f "$src_script" && -x "$src_script" ]]; then
+      found_scripts=true
+      local script_name="$(basename "$src_script")"
+      local dest_link="$scripts_dest/$script_name"
 
-  # Create symlinks for each executable script
-  for src_script in "${executable_scripts[@]}"; do
-    local script_name="$(basename "$src_script")"
-    local dest_link="$scripts_dest/$script_name"
+      # Remove existing symlink or file if it exists
+      if [[ -e "$dest_link" ]] || [[ -L "$dest_link" ]]; then
+        rm -f "$dest_link"
+        log_info "Removed existing symlink/file: $dest_link"
+      fi
 
-    # Remove existing symlink or file if it exists
-    if [[ -e "$dest_link" ]] || [[ -L "$dest_link" ]]; then
-      rm -f "$dest_link"
-      log_info "Removed existing symlink/file: $dest_link"
-    fi
-
-    # Create new symlink
-    ln -sf "$src_script" "$dest_link"
-    if [[ $? -eq 0 ]]; then
-      log_success "Symlink created: $script_name -> $dest_link"
-    else
-      log_error "Failed to create symlink for $script_name"
+      # Create new symlink
+      ln -sf "$src_script" "$dest_link"
+      if [[ $? -eq 0 ]]; then
+        log_success "Symlink created: $script_name -> $dest_link"
+      else
+        log_error "Failed to create symlink for $script_name"
+      fi
     fi
   done
 
+  # Inform if no executable scripts were found
+  if [[ "$found_scripts" == false ]]; then
+    log_warn "No executable scripts found in $scripts_src — nothing to symlink"
+  fi
+
   log_success "Scripts symlinks setup completed"
 }
+
 
 
 # ──────────────────────────────────────────────────────────────
