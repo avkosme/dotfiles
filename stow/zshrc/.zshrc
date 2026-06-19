@@ -135,6 +135,13 @@ alias git-only-master="git branch | grep -v "master" | xargs git branch -D"
 # opencode
 export PATH="$HOME/.opencode/bin:$PATH"
 
+# Directory with scripts
+# Add ~/.local/bin to PATH if it exists and isn't already in PATH
+if [[ -d "$HOME/.local/bin" ]] && [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+  export PATH="$HOME/.local/bin:$PATH"
+fi
+
+
 # Load private aliases (if file exists)
 if [[ -f ~/.ssh_aliases.local ]]; then
   source ~/.ssh_aliases.local

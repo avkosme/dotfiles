@@ -149,6 +149,69 @@ setup_default_shell() {
 }
 
 # ──────────────────────────────────────────────────────────────
+# 5. Setup scripts directory and symlinks
+# ──────────────────────────────────────────────────────────────
+setup_scripts_symlinks() {
+  local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  local dotfiles_root="$(dirname "$script_dir)"
+  local scripts_src="$dotfiles_root/scripts"
+  local scripts_dest="$HOME/.local/bin"
+
+  log_info "Setting up scripts directory and symlinks..."
+
+  # Create destination directory
+  mkdir -p "$scripts_dest"
+  if [[ $? -eq 0 ]]; then
+    log_success "Created directory: $scripts_dest"
+  else
+    log_error "Failed to create directory: $scripts_dest"
+    return 1
+  fi
+
+  # Check if source scripts directory exists
+  if [[ ! -d "$scripts_src" ]]; then
+    log_warn "Source scripts directory not found: $scripts_src — skipping symlink creation"
+    return 0
+  fi
+
+  # Find all executable scripts in source directory
+  local executable_scripts=()
+  while IFS= read -r -d '' script; do
+    if [[ -x "$script" ]]; then
+      executable_scripts+=("$script")
+    fi
+  done < <(find "$scripts_src" -maxdepth 1 -type f -executable -print0 2>/dev/null)
+
+  if [[ ${#executable_scripts[@]} -eq 0 ]]; then
+    log_warn "No executable scripts found in $scripts_src — nothing to symlink"
+    return 0
+  fi
+
+  # Create symlinks for each executable script
+  for src_script in "${executable_scripts[@]}"; do
+    local script_name="$(basename "$src_script")"
+    local dest_link="$scripts_dest/$script_name"
+
+    # Remove existing symlink or file if it exists
+    if [[ -e "$dest_link" ]] || [[ -L "$dest_link" ]]; then
+      rm -f "$dest_link"
+      log_info "Removed existing symlink/file: $dest_link"
+    fi
+
+    # Create new symlink
+    ln -sf "$src_script" "$dest_link"
+    if [[ $? -eq 0 ]]; then
+      log_success "Symlink created: $script_name -> $dest_link"
+    else
+      log_error "Failed to create symlink for $script_name"
+    fi
+  done
+
+  log_success "Scripts symlinks setup completed"
+}
+
+
+# ──────────────────────────────────────────────────────────────
 # Main execution
 # ──────────────────────────────────────────────────────────────
 main() {
@@ -158,6 +221,7 @@ main() {
   install_oh_my_zsh
   apply_dotfiles
   setup_default_shell
+  setup_scripts_symlinks
   
   echo -e "\n${GREEN}✅ Bootstrap complete!${NC}"
   echo -e "💡 Next steps:"
