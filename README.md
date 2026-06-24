@@ -159,6 +159,51 @@ SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt" \
 echo 'alias load-ssh="SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt sops -d ~/.dotfiles/stow/ssh/.ssh_aliases.local.age | source /dev/stdin"' >> ~/.dotfiles/stow/zshrc/.zshrc
 ```
 
+### ✏️ Editing Encrypted Files (Add/Change Aliases)
+
+**Recommended: Edit in-place with SOPS** (opens in your `$EDITOR`, auto-re-encrypts on save):
+
+```bash
+# 1. Set your Age key (if not in .zshrc/.bashrc)
+export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"
+
+# 2. Open encrypted file for editing
+sops stow/ssh/.ssh_aliases.local.age
+
+# 3. Edit in your editor (e.g., nvim, vscode)
+#    - Add new aliases:
+#      alias new-server='ssh user@new.example.com'
+#    - Save & exit
+
+# 4. SOPS auto-re-encrypts on save ✅
+# 5. Commit the updated .age file
+git add stow/ssh/.ssh_aliases.local.age
+git commit -m "feat(ssh): add new-server alias"
+git push
+```
+
+**Alternative: Manual decrypt → edit → re-encrypt**
+
+```bash
+# 1. Decrypt to plaintext (temporary)
+sops -d stow/ssh/.ssh_aliases.local.age > /tmp/ssh_aliases.local
+
+# 2. Edit the plaintext file
+nvim /tmp/ssh_aliases.local
+
+# 3. Re-encrypt (overwrites original)
+sops -e /tmp/ssh_aliases.local > stow/ssh/.ssh_aliases.local.age
+
+# 4. Securely delete plaintext
+shred -u /tmp/ssh_aliases.local  # or: rm -P /tmp/ssh_aliases.local
+
+# 5. Commit changes
+git add stow/ssh/.ssh_aliases.local.age
+git commit -m "feat(ssh): update aliases"
+```
+
+> ⚠️ **Never edit the `.age` file directly** — it's encrypted binary data. Always use `sops <file>` or the decrypt→edit→encrypt workflow.
+
 ### 🧹 Clean Up Decrypted Secrets
 
 ```bash
@@ -214,7 +259,8 @@ rm -f ~/.ssh_aliases.local ~/.config/sops/decrypted/ssh_aliases.local
 | Store `keys.txt` in a password manager or encrypted backup | Commit `keys.txt` or `AGE-SECRET-KEY-...` to git |
 | Use `chmod 600` on key files | Share your private Age key |
 | Decrypt to memory when possible (`source /dev/stdin`) | Leave decrypted files on disk longer than needed |
-| Add `*.age` to `.gitignore` only if unencrypted | Commit plaintext `.local` files alongside `.age` |
+| Use `sops file.age` to edit in-place | Edit `.age` files with a text editor |
+| Set `export EDITOR=nvim` for consistent editing | Leave plaintext files in `/tmp` without shredding |
 
 ### Recommended `.gitignore`
 ```gitignore
@@ -274,3 +320,10 @@ find . -name "*.age" -exec sops --rotate --update-mac {} \;
 
 MIT © [Andrei Kostiuchenko](https://github.com/avkosme)  
 *Free to use, modify, and share — but please credit the source.*
+
+---
+
+> 💬 **Tip**: Keep this README updated! Future-you (and your teammates) will thank you.  
+> 🔄 **Sync across machines**: `git clone && ./scripts/symlink.sh <pkg>` = fully configured dev env in <60s.  
+> 🔐 **Encrypted secrets**: `./scripts/load-ssh-aliases.sh` = secure aliases in seconds.  
+> ✏️ **Edit encrypted files**: `sops stow/ssh/.ssh_aliases.local.age` = safe, in-place editing.
